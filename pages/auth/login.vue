@@ -4,7 +4,9 @@
       <v-col cols="12" md="4" sm="8">
         <v-card>
           <v-form @submit.prevent="login">
-            <v-card-title class="mb-12 display-2 justify-center text-uppercase">Đăng nhập</v-card-title>
+            <v-card-title class="mb-12 display-2 justify-center text-uppercase"
+              >Đăng nhập</v-card-title
+            >
             <v-card-text>
               <v-text-field
                 flat
@@ -41,7 +43,8 @@
                 :loading="$nuxt.$loading && $nuxt.$loading.show"
                 type="submit"
                 x-large
-              >Đăng nhập</v-btn>
+                >Đăng nhập</v-btn
+              >
             </v-card-actions>
           </v-form>
         </v-card>
@@ -53,50 +56,54 @@
 <script>
 import gql from 'graphql-tag'
 export default {
-  layout:'blank',
+  layout: 'blank',
   // middleware: 'notAuthenticated',
 
   data() {
     return {
       email: 'admin@gmail.com',
-      password: '123456'
+      password: '123456',
     }
   },
   computed: {
     formdata() {
       return {
         email: this.email,
-        password: this.password
+        password: this.password,
       }
-    }
+    },
   },
   methods: {
     login() {
-     this.$apollo.mutate({
-      // Query
-      mutation: gql`mutation Login($email: String!, $password: String!) {
-        login(email: $email, password: $password) {
-          token {
-            access_token
-          }
-          user {
-            id
-            name
-            email
-          }
-        }
-      }`,
-      variables: this.formdata,  
-    }).then(({ data }) => {
-      
-      this.$store.commit('auth/token', data.login.token)
-      this.$store.commit('auth/user', data.login.user)
-      this.$router.push({name: 'index'})
-    }).catch((error) => {
-      console.error(error)
-    })
-    }
-  }
+      this.$apollo
+        .mutate({
+          // Query
+          mutation: gql`
+            mutation Login($email: String!, $password: String!) {
+              login(email: $email, password: $password) {
+                token {
+                  access_token
+                }
+                user {
+                  id
+                  name
+                  email
+                }
+              }
+            }
+          `,
+          variables: this.formdata,
+        })
+        .then(({ data }) => {
+          this.$store.commit('auth/token', data.login.token)
+          this.$store.commit('auth/user', data.login.user)
+          this.$router.push({ name: 'index' })
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+  },
 }
 </script>
 
