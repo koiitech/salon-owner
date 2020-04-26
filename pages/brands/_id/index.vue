@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-card @click="editBrand">
+        <v-card :to="{ name: 'brands-id-edit', params: { id: brand.id } }">
           <v-card-title>{{ brand.name }}</v-card-title>
           <v-card-text>{{ brand.description }}</v-card-text>
         </v-card>
@@ -51,7 +51,7 @@ export default {
   methods: {
     editBrand() {
       this.$router.push({
-        name: 'brands-detail',
+        name: 'brands-id-edit',
         params: { id: this.brand.id },
       })
     },

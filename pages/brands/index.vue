@@ -1,5 +1,8 @@
 <template>
   <v-card>
+    <v-toolbar>
+      <v-btn :to="{name: 'brands-add'}">Thêm mới</v-btn>
+    </v-toolbar>
     <v-data-table
       :headers="[
         {
