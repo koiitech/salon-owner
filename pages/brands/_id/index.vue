@@ -3,30 +3,89 @@
     <v-row>
       <v-col>
         <v-card :to="{ name: 'brands-id-edit', params: { id: brand.id } }">
+          <v-img
+            class="grey lighten-2 align-end elevation-3"
+            :aspect-ratio="16 / 9"
+            :src="brand.cover | imgPath"
+          >
+            <v-row justify="center">
+              <v-avatar size="150" class="mb-5 elevation-3" color="white">
+                <v-icon v-if="!brand.logo">mdi-image</v-icon>
+                <img v-else :src="brand.logo | imgPath" alt="" />
+              </v-avatar>
+            </v-row>
+          </v-img>
           <v-card-title>{{ brand.name }}</v-card-title>
-          <v-card-text>{{ brand.description }}</v-card-text>
+          <v-card-subtitle>{{ brand.address }}</v-card-subtitle>
+          <v-card-text>
+            <v-row align="center" class="mx-0">
+              <v-rating
+                :value="4.5"
+                color="amber"
+                dense
+                half-increments
+                readonly
+                size="14"
+              ></v-rating>
+
+              <div class="grey--text ml-4">4.5 (413)</div>
+            </v-row>
+
+            <div class="my-4">
+              {{ brand.description }}
+            </div>
+          </v-card-text>
+
+          <v-divider class="mx-4"></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="deep-purple lighten-2" text>
+              Sửa
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
       <v-col>
-        <v-card>
-          <v-card-title>Salons</v-card-title>
-          <v-card-text>
-            <v-card v-for="(salon, index) in brand.salons" :key="index">
-              <v-img
-                class="align-end justify-center"
-                :aspect-ratio="16 / 9"
-                :src="salon.cover | imgPath"
+        <v-card outlined>
+          <v-toolbar color="primary" dark>
+            <v-btn
+              :to="{ name: 'brands-id-salons-add', params: { id: brand.id } }"
+              ><v-icon left>mdi-plus</v-icon> Thêm mới</v-btn
+            >
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+
+            <v-btn text
+              @click="$apollo.queries.brand.refetch()"
+              ><v-icon>mdi-sync</v-icon></v-btn
+            >
+            </v-toolbar-items>
+          </v-toolbar>
+
+          <v-list three-line>
+            <v-subheader>Salons</v-subheader>
+            <template v-for="(item, index) in brand.salons">
+              <v-list-item
+                :key="index"
+                :to="{
+                  name: 'brands-id-salons-salon-edit',
+                  params: { id: brand.id, salon: item.id },
+                }"
               >
-                <v-row align="center" justify="center">
-                  <v-avatar size="150" class="mb-5">
-                    <img :src="salon.logo | imgPath" alt="" />
-                  </v-avatar>
-                </v-row>
-              </v-img>
-              <v-card-title>{{ salon.name }}</v-card-title>
-              <v-card-text>{{ brand.description }}</v-card-text>
-            </v-card>
-          </v-card-text>
+                <v-list-item-avatar>
+                  <v-img sizes="92" :src="item.logo | imgPath"></v-img>
+                </v-list-item-avatar>
+
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                  <v-list-item-subtitle
+                    v-text="item.address"
+                  ></v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list>
         </v-card>
       </v-col>
     </v-row>
@@ -47,9 +106,14 @@ export default {
             address
             cover
             logo
+            description
             salons {
               id
               name
+              address
+              cover
+              logo
+              description
             }
           }
         }

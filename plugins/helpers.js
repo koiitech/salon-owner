@@ -1,13 +1,17 @@
 import Vue from 'vue'
 
 
+export default ({ env }, inject) => {
+  Vue.filter('imgPath', val => {
 
-Vue.filter('imgPath', val => {
-  console.log(process.env);
+    if (!val) {
+      return ""
+    }
 
-  if (val.startsWith('http') || val.startsWith('data')) {
-    return val
-  } else {
-    return process.env.API_URL + val
-  }
-})
+    if (val.startsWith('http') || val.startsWith('data')) return val
+
+
+    return env.API_URL + val
+  })
+}
+
