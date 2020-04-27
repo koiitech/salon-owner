@@ -8,22 +8,22 @@
             :aspect-ratio="16 / 9"
             :src="brand.cover | imgPath"
           >
-            <v-row  justify="center">
-                <v-avatar size="150" class="mb-5" color="white">
-                  <v-btn
-                    color="pink"
-                    dark
-                    small
-                    absolute
-                    bottom
-                    fab
-                    @click="$refs.logoInput.click()"
-                  >
-                    <v-icon>mdi-camera</v-icon>
-                  </v-btn>
-                  <v-icon v-if="!brand.logo">mdi-image</v-icon>
-                  <img v-else :src="brand.logo | imgPath" alt="" />
-                </v-avatar>
+            <v-row justify="center">
+              <v-avatar size="150" class="mb-5" color="white">
+                <v-btn
+                  color="pink"
+                  dark
+                  small
+                  absolute
+                  bottom
+                  fab
+                  @click="$refs.logoInput.click()"
+                >
+                  <v-icon>mdi-camera</v-icon>
+                </v-btn>
+                <v-icon v-if="!brand.logo">mdi-image</v-icon>
+                <img v-else :src="brand.logo | imgPath" alt="" />
+              </v-avatar>
             </v-row>
             <v-btn
               color="pink"
@@ -78,7 +78,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn :to="{ name: 'brands-id', pagrams: { id: brand.id } }"
+            <v-btn :to="{ name: 'brands'}"
               >Huỷ</v-btn
             >
             <v-btn color="primary" :loading="$apollo.loading" type="submit"
@@ -152,6 +152,53 @@ export default {
       }
     },
     save() {
+      !this.brand.id ? this.saveNew() : this.saveUpdate()
+    },
+    saveNew() {
+      this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation CreateBrand(
+              $name: String!
+              $description: String
+              $logo: String
+              $cover: String
+              $address: String
+            ) {
+              createBrand(
+                name: $name
+                user_id: "1a82e676-2b3f-48e3-b785-546dc2643d28"
+                description: $description
+                logo: $logo
+                cover: $cover
+                address: $address
+              ) {
+                id
+                name
+                description
+                cover
+                logo
+                address
+              }
+            }
+          `,
+          variables: {
+            name: this.brand.name,
+            description: this.brand.description,
+            logo: this.brand.logo,
+            cover: this.brand.cover,
+            address: this.brand.address,
+          },
+        })
+        .then(({ data }) => {
+          console.log(data)
+          this.brand = Object.assign({}, data.createBrand)
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    saveUpdate() {
       this.$apollo
         .mutate({
           mutation: gql`
