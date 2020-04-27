@@ -20,14 +20,14 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar clipped-left fixed app>
+    <v-app-bar clipped-left fixed app color="white">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
     
       <v-toolbar-title v-text="title" />
       <v-spacer />
      
     </v-app-bar>
-    <v-content>
+    <v-content class="grey lighten-4">
       <v-container>
         <nuxt />
       </v-container>
