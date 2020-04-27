@@ -1,6 +1,6 @@
 <template>
   <v-row align="center" justify="center">
-    <v-col cols="6" lg="5">
+    <v-col cols="12" sm="8" md="6" lg="5" xl="4">
       <v-card>
         <v-form @submit.prevent="save">
           <v-img
@@ -45,16 +45,28 @@
               ref="logoInput"
               accept="image/*"
               @change="logoPicked($event, 'logo')"
+              class="d-none"
             />
             <input
               type="file"
               ref="coverInput"
               accept="image/*"
               @change="logoPicked($event, 'cover')"
+              class="d-none"
             />
-            <v-text-field label="Logo" type="text" v-model="brand.logo">
+            <v-text-field
+              class="d-none"
+              label="Logo"
+              type="text"
+              v-model="brand.logo"
+            >
             </v-text-field>
-            <v-text-field label="Cover" type="text" v-model="brand.cover">
+            <v-text-field
+              class="d-none"
+              label="Cover"
+              type="text"
+              v-model="brand.cover"
+            >
             </v-text-field>
             <v-text-field label="Tên salon" type="text" v-model="brand.name">
             </v-text-field>
@@ -65,6 +77,9 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
+            <v-btn :to="{ name: 'brands-id', pagrams: { id: brand.id } }"
+              >Huỷ</v-btn
+            >
             <v-btn color="primary" :loading="$apollo.loading" type="submit"
               >Lưu</v-btn
             >
@@ -109,10 +124,10 @@ export default {
   }),
   computed: {
     logoPath() {
-      return process.env.API_URL + this.brand.logo
+      return this.brand.logo ? process.env.API_URL + this.brand.logo : ''
     },
     coverPath() {
-      return process.env.API_URL + this.brand.cover
+      return this.brand.cover ? process.env.API_URL + this.brand.cover : ''
     },
   },
   methods: {
@@ -136,7 +151,6 @@ export default {
           .then(({ data }) => {
             this.uploadFileStatus = false
             this.$set(this.brand, type, data.upload)
-
           })
           .catch((error) => {
             this.uploadFileStatus = false

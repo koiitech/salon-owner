@@ -8,9 +8,25 @@
         </v-card>
       </v-col>
       <v-col>
-        <v-card v-for="(salon, index) in brand.salons" :key="index">
-          <v-card-title>{{ salon.name }}</v-card-title>
-          <v-card-text>{{ brand.description }}</v-card-text>
+        <v-card>
+          <v-card-title>Salons</v-card-title>
+          <v-card-text>
+            <v-card v-for="(salon, index) in brand.salons" :key="index">
+              <v-img
+                class="align-end justify-center"
+                :aspect-ratio="16 / 9"
+                :src="salon.cover | imgPath"
+              >
+                <v-row align="center" justify="center">
+                  <v-avatar size="150" class="mb-5">
+                    <img :src="salon.logo | imgPath" alt="" />
+                  </v-avatar>
+                </v-row>
+              </v-img>
+              <v-card-title>{{ salon.name }}</v-card-title>
+              <v-card-text>{{ brand.description }}</v-card-text>
+            </v-card>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -29,7 +45,7 @@ export default {
             id
             name
             address
-            convert
+            cover
             logo
             salons {
               id
@@ -48,14 +64,7 @@ export default {
   data: () => ({
     brand: {},
   }),
-  methods: {
-    editBrand() {
-      this.$router.push({
-        name: 'brands-id-edit',
-        params: { id: this.brand.id },
-      })
-    },
-  },
+  methods: {},
 }
 </script>
 
