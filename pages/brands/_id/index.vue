@@ -55,11 +55,9 @@
             >
             <v-spacer></v-spacer>
             <v-toolbar-items>
-
-            <v-btn text
-              @click="$apollo.queries.brand.refetch()"
-              ><v-icon>mdi-sync</v-icon></v-btn
-            >
+              <v-btn text @click="$apollo.queries.brand.refetch()"
+                ><v-icon>mdi-sync</v-icon></v-btn
+              >
             </v-toolbar-items>
           </v-toolbar>
 
@@ -87,6 +85,49 @@
             </template>
           </v-list>
         </v-card>
+      </v-col>
+      <v-col cols="12">
+        <v-data-table
+          :headers="[
+            { text: 'Tên', value: 'name' },
+            { text: 'email', value: 'email' },
+            { text: '', value: '' },
+          ]"
+          :items="employees.data"
+          :options.sync="options"
+          :server-items-length="employees.paginatorInfo.total"
+          :loading="$apollo.loading"
+          @click:row="
+            (item) =>
+              $router.push({
+                name: 'brands-id-employees-employee',
+                params: { id: item.brand_id, employee: item.id },
+              })
+          "
+        >
+          <template v-slot:top>
+            <v-toolbar color="primary" dark flat>
+              <v-icon left>mdi-account-box-multiple</v-icon> Nhân viên
+              <v-spacer />
+              <v-text-field
+                solo-inverted
+                label="Tìm nhân viên"
+                hide-details
+                single-line
+                clearable
+                rounded
+              ></v-text-field>
+              <v-divider vertical class="mx-3" />
+              <v-btn
+                :to="{
+                  name: 'brands-id-employees-add',
+                  params: { id: brand.id },
+                }"
+                ><v-icon left>mdi-plus</v-icon>Thêm mới</v-btn
+              >
+            </v-toolbar>
+          </template></v-data-table
+        >
       </v-col>
     </v-row>
   </v-container>
@@ -124,9 +165,41 @@ export default {
         }
       },
     },
+
+    employees: {
+      query: gql`
+        query GetEmployees($first: Int!, $page: Int, $brand_id: ID) {
+          employees(first: $first, page: $page, brand_id: $brand_id) {
+            data {
+              id
+              name
+              email
+              avatar
+              brand_id
+            }
+            paginatorInfo {
+              total
+              hasMorePages
+            }
+          }
+        }
+      `,
+      variables() {
+        return {
+          page: this.options.page || 1,
+          first: this.options.itemsPerPage || 10,
+          brand_id: this.$route.params.id,
+        }
+      },
+    },
   },
   data: () => ({
     brand: {},
+    options: {},
+    employees: {
+      data: [],
+      paginatorInfo: {},
+    },
   }),
   methods: {},
 }

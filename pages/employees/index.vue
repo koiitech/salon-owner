@@ -1,8 +1,5 @@
 <template>
   <v-card>
-    <v-toolbar>
-      <v-btn :to="{ name: 'employees-add' }">Thêm mới</v-btn>
-    </v-toolbar>
     <v-data-table
       :headers="[
         { text: 'Tên', value: 'name' },
@@ -15,8 +12,25 @@
       :loading="$apollo.loading"
       @click:row="
         (item) =>
-          $router.push({ name: 'employees-id', params: { id: item.id } })
+          $router.push({
+            name: 'brands-id-employees-employee',
+            params: { id: item.brand_id, employee: item.id },
+          })
       "
+    >
+      <template v-slot:top>
+        <v-toolbar color="primary" dark flat>
+          <v-icon left>mdi-account-box-multiple</v-icon> Nhân viên
+          <v-spacer />
+          <v-text-field
+            solo-inverted
+            label="Tìm nhân viên"
+            hide-details
+            single-line
+            clearable
+            rounded
+          ></v-text-field>
+        </v-toolbar> </template
     ></v-data-table>
   </v-card>
 </template>
@@ -34,6 +48,7 @@ export default {
               id
               name
               email
+              brand_id
             }
             paginatorInfo {
               total

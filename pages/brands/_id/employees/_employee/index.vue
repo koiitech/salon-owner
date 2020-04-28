@@ -49,7 +49,10 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            :to="{ name: 'employees-id-edit', params: { id: employee.id } }"
+            :to="{
+              name: 'brands-id-employees-employee-edit',
+              params: { id: $route.params.id, employee: employee.id },
+            }"
             text
             color="primary"
             >Sửa</v-btn
@@ -89,7 +92,7 @@ export default {
       `,
       variables() {
         return {
-          id: this.$route.params.id,
+          id: this.$route.params.employee,
         }
       },
     },
