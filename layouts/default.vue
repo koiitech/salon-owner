@@ -49,9 +49,9 @@ export default {
           name: 'brands',
         },
         {
-          icon: 'mdi-apps',
-          title: 'Dịch vụ',
-          name: 'inspire',
+          icon: 'mdi-users',
+          title: 'Nhân viên',
+          name: 'employees',
         },
       ],
       title: 'Hệ thống quản lý salon',

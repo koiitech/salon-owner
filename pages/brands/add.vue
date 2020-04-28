@@ -167,7 +167,6 @@ export default {
             ) {
               createBrand(
                 name: $name
-                user_id: "1a82e676-2b3f-48e3-b785-546dc2643d28"
                 description: $description
                 logo: $logo
                 cover: $cover
@@ -213,7 +212,6 @@ export default {
               updateBrand(
                 id: $id
                 name: $name
-                user_id: "1a82e676-2b3f-48e3-b785-546dc2643d28"
                 description: $description
                 logo: $logo
                 cover: $cover

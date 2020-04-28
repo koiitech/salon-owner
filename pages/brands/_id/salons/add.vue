@@ -172,7 +172,6 @@ export default {
                 logo: $logo
                 cover: $cover
                 address: $address
-                user_id: "1a82e676-2b3f-48e3-b785-546dc2643d28"
                 brand_id: $brand_id
               ) {
                 id
