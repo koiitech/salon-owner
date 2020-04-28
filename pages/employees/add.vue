@@ -38,15 +38,21 @@
             <v-text-field label="Tên salon" type="text" v-model="employee.name">
             </v-text-field>
             <v-text-field
-              label="Mô tả"
-              type="text"
-              v-model="employee.description"
+              label="email"
+              type="email"
+              v-model="employee.email"
             >
             </v-text-field>
             <v-text-field
-              label="Địa chỉ"
+              label="Điện thoại"
+              type="tel"
+              v-model="employee.phone"
+            >
+            </v-text-field>
+            <v-text-field
+              label="Sinh nhật (yyyy-mm-dd)"
               type="text"
-              v-model="employee.address"
+              v-model="employee.birthday"
             >
             </v-text-field>
           </v-card-text>
