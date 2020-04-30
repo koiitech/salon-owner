@@ -67,8 +67,8 @@
               <v-list-item
                 :key="index"
                 :to="{
-                  name: 'brands-id-salons-salon-edit',
-                  params: { id: brand.id, salon: item.id },
+                  name: 'salons-salon',
+                  params: { salon: item.id },
                 }"
               >
                 <v-list-item-avatar>
