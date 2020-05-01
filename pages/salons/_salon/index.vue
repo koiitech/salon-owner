@@ -122,20 +122,31 @@
           <v-expansion-panel v-for="category in categories" :key="category.id">
             <v-expansion-panel-header>
               <v-list three-line>
-                <v-list-item>
-                  <v-list-item-action v-if="!category.image">
-                    <v-icon>mdi-camera</v-icon>
-                  </v-list-item-action>
-                  <v-list-item-avatar v-else>
-                    <img :src="category.image" />
-                  </v-list-item-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title>{{ category.name }}</v-list-item-title>
-                    <v-list-item-subtitle>{{
-                      category.description
-                    }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
+                <v-hover v-slot:default="{ hover }">
+                  <v-list-item>
+                    <template v-if="hover">
+                      <v-list-item-action>
+                        <v-btn class="grey lighten-4" icon>
+                          <v-icon>mdi-edit-outline</v-icon>
+                        </v-btn>
+                      </v-list-item-action>
+                    </template>
+                    <template v-else>
+                      <v-list-item-action v-if="!category.image">
+                        <v-icon>mdi-camera</v-icon>
+                      </v-list-item-action>
+                      <v-list-item-avatar v-else>
+                        <img :src="category.image" />
+                      </v-list-item-avatar>
+                    </template>
+                    <v-list-item-content>
+                      <v-list-item-title>{{ category.name }}</v-list-item-title>
+                      <v-list-item-subtitle>{{
+                        category.description
+                      }}</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-hover>
               </v-list>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
