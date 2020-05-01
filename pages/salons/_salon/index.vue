@@ -98,7 +98,10 @@
           <v-toolbar-items>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn @click="openCategoryDialog" text v-on="on"
+                <v-btn
+                  @click="openCategoryDialog({ salon_id: salon.id })"
+                  text
+                  v-on="on"
                   ><v-icon>mdi-server-plus</v-icon></v-btn
                 >
               </template>
@@ -126,21 +129,23 @@
               <v-list three-line>
                 <v-hover v-slot:default="{ hover }">
                   <v-list-item>
-                    <template v-if="hover">
-                      <v-list-item-action>
-                        <v-btn class="grey lighten-4" icon>
-                          <v-icon>mdi-edit-outline</v-icon>
+                    <v-list-item-avatar>
+                      <template v-if="hover">
+                        <v-btn
+                          icon
+                          small
+                          width="48"
+                          height="48"
+                          @click.stop="openCategoryDialog(category)"
+                        >
+                          <v-icon>mdi-pencil-outline</v-icon>
                         </v-btn>
-                      </v-list-item-action>
-                    </template>
-                    <template v-else>
-                      <v-list-item-action v-if="!category.image">
-                        <v-icon>mdi-camera</v-icon>
-                      </v-list-item-action>
-                      <v-list-item-avatar v-else>
-                        <img :src="category.image" />
-                      </v-list-item-avatar>
-                    </template>
+                      </template>
+                      <template v-else>
+                        <v-icon v-if="!category.image">mdi-camera</v-icon>
+                        <img v-else :src="category.image | imgPath" />
+                      </template>
+                    </v-list-item-avatar>
                     <v-list-item-content>
                       <v-list-item-title>{{ category.name }}</v-list-item-title>
                       <v-list-item-subtitle>{{
@@ -154,48 +159,118 @@
             <v-expansion-panel-content>
               <v-list three-line>
                 <template v-for="service in category.services">
-                  <v-list-group :key="service.id" no-action value="true">
-                    <template v-slot:activator>
-                      <v-list-item-action v-if="!service.image">
-                        <v-icon>mdi-camera</v-icon>
-                      </v-list-item-action>
-                      <v-list-item-avatar v-else>
-                        <img :src="service.image" />
+                  <v-hover
+                    v-if="service.extras.length === 0"
+                    :key="service.id"
+                    v-slot:default="{ hover }"
+                  >
+                    <v-list-item class="ml-3">
+                      <v-list-item-avatar>
+                        <template v-if="hover">
+                          <v-btn
+                            icon
+                            small
+                            width="48"
+                            height="48"
+                            @click.stop="openServiceDialog(service)"
+                          >
+                            <v-icon>mdi-pencil-outline</v-icon>
+                          </v-btn>
+                        </template>
+                        <template v-else>
+                          <v-icon v-if="!service.image">mdi-camera</v-icon>
+                          <img v-else :src="service.image | imgPath" />
+                        </template>
                       </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title>{{
                           service.name
                         }}</v-list-item-title>
-                        <v-list-item-subtitle
-                          >${{ service.description }}</v-list-item-subtitle
-                        >
+                        <v-list-item-subtitle>{{
+                          service.description
+                        }}</v-list-item-subtitle>
                       </v-list-item-content>
                       <v-list-item-action>
                         ${{ service.price }}
                       </v-list-item-action>
+                    </v-list-item>
+                  </v-hover>
+                  <v-list-group
+                    v-else
+                    three-line
+                    :key="service.id"
+                    no-action
+                    value="true"
+                  >
+                    <template v-slot:activator>
+                      <v-hover v-slot:default="{ hover }">
+                        <v-list-item>
+                          <v-list-item-avatar>
+                            <template v-if="hover">
+                              <v-btn
+                                icon
+                                small
+                                width="48"
+                                height="48"
+                                @click.stop="openServiceDialog(service)"
+                              >
+                                <v-icon>mdi-pencil-outline</v-icon>
+                              </v-btn>
+                            </template>
+                            <template v-else>
+                              <v-icon v-if="!service.image">mdi-camera</v-icon>
+                              <img v-else :src="service.image | imgPath" />
+                            </template>
+                          </v-list-item-avatar>
+                          <v-list-item-content>
+                            <v-list-item-title>{{
+                              service.name
+                            }}</v-list-item-title>
+                            <v-list-item-subtitle>{{
+                              service.description
+                            }}</v-list-item-subtitle>
+                          </v-list-item-content>
+                          <v-list-item-action>
+                            ${{ service.price }}
+                          </v-list-item-action>
+                        </v-list-item>
+                      </v-hover>
                     </template>
 
-                    <v-list-item
-                      class="ml-5"
-                      v-for="extra in service.extras"
-                      :key="extra.id"
-                    >
-                      <v-list-item-action v-if="!extra.image">
-                        <v-icon>mdi-camera</v-icon>
-                      </v-list-item-action>
-                      <v-list-item-avatar v-else>
-                        <img :src="extra.image" />
-                      </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title>{{ extra.name }}</v-list-item-title>
-                        <v-list-item-subtitle>{{
-                          extra.description
-                        }}</v-list-item-subtitle>
-                      </v-list-item-content>
-                      <v-list-item-action>
-                        ${{ extra.price }}
-                      </v-list-item-action>
-                    </v-list-item>
+                    <template v-for="extra in service.extras">
+                      <v-hover v-slot:default="{ hover }" :key="extra.id">
+                        <v-list-item class="ml-3">
+                          <v-list-item-avatar>
+                            <template v-if="hover">
+                              <v-btn
+                                icon
+                                small
+                                width="48"
+                                height="48"
+                                @click.stop="openExtraDialog(extra)"
+                              >
+                                <v-icon>mdi-pencil-outline</v-icon>
+                              </v-btn>
+                            </template>
+                            <template v-else>
+                              <v-icon v-if="!extra.image">mdi-camera</v-icon>
+                              <img v-else :src="extra.image | imgPath" />
+                            </template>
+                          </v-list-item-avatar>
+                          <v-list-item-content>
+                            <v-list-item-title>{{
+                              extra.name
+                            }}</v-list-item-title>
+                            <v-list-item-subtitle>{{
+                              extra.description
+                            }}</v-list-item-subtitle>
+                          </v-list-item-content>
+                          <v-list-item-action>
+                            ${{ extra.price }}
+                          </v-list-item-action>
+                        </v-list-item>
+                      </v-hover>
+                    </template>
                   </v-list-group>
                 </template>
               </v-list>
@@ -205,15 +280,19 @@
       </v-col>
     </v-row>
     <category-dialog ref="categoryDialog" />
+    <service-dialog ref="serviceDialog" />
+    <extra-dialog ref="extraDialog" />
   </v-container>
 </template>
 
 <script>
 import gql from 'graphql-tag'
 import CategoryDialog from './category-dialog'
+import ServiceDialog from './service-dialog'
+import ExtraDialog from './extra-dialog'
 
 export default {
-  components: { CategoryDialog },
+  components: { CategoryDialog, ServiceDialog, ExtraDialog },
   apollo: {
     salon: {
       query: gql`
@@ -274,12 +353,16 @@ export default {
               description
               image
               price
+              index
+              minutes
               extras {
                 id
                 name
                 description
                 image
                 price
+                index
+                minutes
               }
             }
           }
@@ -302,10 +385,19 @@ export default {
     categories: [],
   }),
   methods: {
-    openCategoryDialog() {
-      this.$refs.categoryDialog.open().then((result) => {
-        console.log('Form đã đóng do sự kiện save')
-        console.log(result)
+    openCategoryDialog(category) {
+      this.$refs.categoryDialog.open(category).then((result) => {
+        this.$apollo.queries.categories.refetch()
+      })
+    },
+    openServiceDialog(service) {
+      this.$refs.serviceDialog.open(service).then((result) => {
+        this.$apollo.queries.categories.refetch()
+      })
+    },
+    openExtraDialog(extra) {
+      this.$refs.extraDialog.open(extra).then((result) => {
+        this.$apollo.queries.categories.refetch()
       })
     },
   },
