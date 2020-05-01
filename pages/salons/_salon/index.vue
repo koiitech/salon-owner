@@ -98,7 +98,9 @@
           <v-toolbar-items>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn text v-on="on"><v-icon>mdi-server-plus</v-icon></v-btn>
+                <v-btn @click="openCategoryDialog" text v-on="on"
+                  ><v-icon>mdi-server-plus</v-icon></v-btn
+                >
               </template>
               <span>Thêm danh mục</span>
             </v-tooltip>
@@ -186,60 +188,21 @@
                   </v-list-group>
                 </template>
               </v-list>
-              <!-- <v-list three-line>
-                    <v-list-item
-                      v-for="service in category.services"
-                      :key="service.id"
-                    >
-                      <v-list-item-avatar>
-                        <img :src="service.image" />
-                      </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title>{{
-                          service.name
-                        }}</v-list-item-title>
-                        <v-list-item-subtitle>{{
-                          service.description
-                        }}</v-list-item-subtitle>
-                      </v-list-item-content>
-                      <v-list-item-action>
-                        ${{ service.price }}
-                      </v-list-item-action>
-                    </v-list-item>
-                    <v-list class="ml-5" three-line>
-                      <v-list-item
-                        v-for="extra in service.extras"
-                        :key="extra.id"
-                      >
-                        <v-list-item-avatar>
-                          <img :src="extra.image" />
-                        </v-list-item-avatar>
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            extra.name
-                          }}</v-list-item-title>
-                          <v-list-item-subtitle>{{
-                            extra.description
-                          }}</v-list-item-subtitle>
-                        </v-list-item-content>
-                        <v-list-item-action>
-                          ${{ extra.price }}
-                        </v-list-item-action>
-                      </v-list-item>
-                    </v-list>
-                  </v-list> -->
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
       </v-col>
     </v-row>
+    <category-dialog ref="categoryDialog" />
   </v-container>
 </template>
 
 <script>
 import gql from 'graphql-tag'
+import CategoryDialog from './category-dialog'
 
 export default {
+  components: { CategoryDialog },
   apollo: {
     salon: {
       query: gql`
@@ -327,7 +290,14 @@ export default {
     },
     categories: [],
   }),
-  methods: {},
+  methods: {
+    openCategoryDialog() {
+      this.$refs.categoryDialog.open().then((result) => {
+        console.log('Form đã đóng do sự kiện save')
+        console.log(result)
+      })
+    },
+  },
 }
 </script>
 
