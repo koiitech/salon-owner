@@ -1,4 +1,4 @@
 <script>
-import Add from '../add'
+import Add from '~/components/dialogs/brand-dialog.vue'
 export default Add
 </script>
