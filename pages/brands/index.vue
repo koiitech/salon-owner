@@ -34,7 +34,7 @@
           <v-icon v-if="!item.logo">
             mdi-camera
           </v-icon>
-          <img :src="item.logo | imgPath" alt="item.name" />
+          <img v-else :src="item.logo | imgPath" alt="item.name" />
         </v-avatar>
       </template>
     </v-data-table>
