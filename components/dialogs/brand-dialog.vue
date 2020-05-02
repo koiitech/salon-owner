@@ -9,7 +9,7 @@
       <v-form @submit.prevent="save">
         <v-img
           class="grey lighten-2 align-end"
-          :aspect-ratio="16 / 9"
+          :aspect-ratio="12 / 9"
           :src="brand.cover | imgPath"
         >
           <v-row justify="center">

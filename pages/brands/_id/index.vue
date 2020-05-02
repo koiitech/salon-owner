@@ -5,7 +5,7 @@
         <v-card>
           <v-img
             class="grey lighten-2 align-end elevation-3"
-            :aspect-ratio="16 / 9"
+            :aspect-ratio="12 / 9"
             :src="brand.cover | imgPath"
           >
             <v-row justify="center">
@@ -116,6 +116,17 @@
                   >
                 </template>
                 <span>Thêm nhân viên</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    v-on="on"
+                    icon
+                    @click="$apollo.queries.employees.refetch()"
+                    ><v-icon>mdi-sync</v-icon></v-btn
+                  >
+                </template>
+                <span>Cập nhật dữ liệu</span>
               </v-tooltip>
             </v-toolbar-items>
           </v-toolbar>

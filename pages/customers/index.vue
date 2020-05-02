@@ -1,62 +1,63 @@
 <template>
   <v-card>
     <v-toolbar color="primary" dark flat>
-      <v-icon left>mdi-star-circle-outline</v-icon>Thương hiệu
+      <v-icon left>mdi-account-group-outline</v-icon>Khách hàng
       <v-spacer />
       <v-toolbar-items>
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" text @click="openBrandDialog"
-              ><v-icon>mdi-plus-circle-outline</v-icon></v-btn
+            <v-btn v-on="on" text @click="openCustomerDialog"
+              ><v-icon>mdi-account-plus-outline</v-icon></v-btn
             >
           </template>
-          <span>Thêm thương hiệu</span>
+          <span>Thêm khách hàng</span>
         </v-tooltip>
       </v-toolbar-items>
     </v-toolbar>
     <v-data-table
       :headers="[
-        { text: '', value: 'logo', sortable: false, width: '1%' },
+        { text: '', value: 'avatar', sortable: false, width: '1%' },
         { text: 'Tên', value: 'name' },
-        { text: 'Mô tả', value: 'description', sortable: false },
+        { text: 'Mô tả', value: 'email', sortable: false },
         { text: '', value: '' },
       ]"
-      :items="brands.data"
+      :items="customers.data"
       :options.sync="options"
-      :server-items-length="brands.paginatorInfo.total"
+      :server-items-length="customers.paginatorInfo.total"
       :loading="$apollo.loading"
       @click:row="
-        (item) => $router.push({ name: 'brands-id', params: { id: item.id } })
+        (item) =>
+          $router.push({ name: 'customers-id', params: { id: item.id } })
       "
     >
-      <template v-slot:item.logo="{ item }">
+      <template v-slot:item.avatar="{ item }">
         <v-avatar size="32" class="elevation-1">
-          <v-icon v-if="!item.logo">
-            mdi-camera
+          <v-icon v-if="!item.avatar">
+            mdi-account-outline
           </v-icon>
-          <img v-else :src="item.logo | imgPath" alt="item.name" />
+          <img v-else :src="item.avatar | imgPath" alt="item.name" />
         </v-avatar>
       </template>
     </v-data-table>
-    <brand-dialog ref="brandDialog" />
+    <customer-dialog ref="customerDialog" />
   </v-card>
 </template>
 
 <script>
 import gql from 'graphql-tag'
-import BrandDialog from '~/components/dialogs/brand-dialog.vue'
+import CustomerDialog from '~/components/dialogs/customer-dialog.vue'
 export default {
-  components: { BrandDialog },
+  components: { CustomerDialog },
   apollo: {
-    brands: {
+    customers: {
       query: gql`
-        query GetBrands($page: Int, $first: Int!) {
-          brands(page: $page, first: $first) {
+        query GetCustomers($page: Int, $first: Int!) {
+          customers(page: $page, first: $first) {
             data {
               id
               name
-              logo
-              description
+              avatar
+              email
             }
             paginatorInfo {
               hasMorePages
@@ -64,6 +65,7 @@ export default {
           }
         }
       `,
+
       variables() {
         return {
           page: this.options.page || 1,
@@ -73,16 +75,16 @@ export default {
     },
   },
   data: () => ({
-    brands: {
+    customers: {
       data: [],
       paginatorInfo: {},
     },
     options: {},
   }),
   methods: {
-    openBrandDialog() {
-      this.$refs.brandDialog.open().then((result) => {
-        this.$apollo.queries.brands.refetch()
+    openCustomerDialog() {
+      this.$refs.customerDialog.open().then((result) => {
+        this.$apollo.queries.customers.refetch()
       })
     },
   },
