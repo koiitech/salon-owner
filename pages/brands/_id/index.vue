@@ -101,46 +101,25 @@
         </v-card>
       </v-col>
       <v-col cols="12">
-        <v-toolbar color="primary" dark flat>
-          <v-icon left>mdi-account-box-multiple</v-icon> Nhân viên
-          <v-spacer />
-          <v-toolbar-items>
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  v-on="on"
-                  icon
-                  :to="{
-                    name: 'brands-id-employees-add',
-                    params: { id: brand.id },
-                  }"
-                  ><v-icon>mdi-account-plus-outline</v-icon></v-btn
-                >
-              </template>
-              <span>Thêm nhân viên</span>
-            </v-tooltip>
-          </v-toolbar-items>
-        </v-toolbar>
-        <v-data-table
-          :headers="[
-            { text: '', value: 'avatar', width: '1%', sortable: false },
-            { text: 'Tên', value: 'name' },
-            { text: 'email', value: 'email' },
-            { text: '', value: 'actions' },
-          ]"
-          :items="employees.data"
-          :options.sync="options"
-          :server-items-length="employees.paginatorInfo.total"
-          :loading="$apollo.loading"
-          @click:row="
-            (item) =>
-              $router.push({
-                name: 'brands-id-employees-employee',
-                params: { id: item.brand_id, employee: item.id },
-              })
-          "
-        >
-          <template v-slot:top>
+        <v-card>
+          <v-toolbar color="primary" dark flat>
+            <v-icon left>mdi-account-box-multiple</v-icon> Nhân viên
+            <v-spacer />
+            <v-toolbar-items>
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    v-on="on"
+                    icon
+                    @click="openEmployeeDialog({ brand_id: brand.id })"
+                    ><v-icon>mdi-account-plus-outline</v-icon></v-btn
+                  >
+                </template>
+                <span>Thêm nhân viên</span>
+              </v-tooltip>
+            </v-toolbar-items>
+          </v-toolbar>
+          <v-card-text class="py-0">
             <v-row>
               <v-col cols="12" sm="6"></v-col>
               <v-col cols="12" sm="6"
@@ -153,20 +132,39 @@
                 ></v-text-field
               ></v-col>
             </v-row>
-          </template>
-          <template v-slot:item.avatar="{ item }">
-            <v-avatar size="32">
-              <v-icon v-if="!item.avatar">
-                mdi-account
-              </v-icon>
-              <img :src="item.avatar | imgPath" alt="item.name" />
-            </v-avatar>
-          </template>
-        </v-data-table>
+          </v-card-text>
+          <v-data-table
+            :headers="[
+              { text: '', value: 'avatar', width: '1%', sortable: false },
+              { text: 'Tên', value: 'name' },
+              { text: 'email', value: 'email' },
+              { text: '', value: 'actions' },
+            ]"
+            :items="employees.data"
+            :options.sync="options"
+            :server-items-length="employees.paginatorInfo.total"
+            :loading="$apollo.loading"
+            @click:row="
+              (item) =>
+                $router.push({
+                  name: 'brands-id-employees-employee',
+                  params: { id: item.brand_id, employee: item.id },
+                })
+            "
+          >
+            <template v-slot:item.avatar="{ item }">
+              <v-avatar size="32" class="elevation-1">
+                <v-icon v-if="!item.avatar">mdi-account</v-icon>
+                <img v-else :src="item.avatar | imgPath" alt="item.name" />
+              </v-avatar>
+            </template>
+          </v-data-table>
+        </v-card>
       </v-col>
     </v-row>
     <brand-dialog ref="brandDialog" />
     <salon-dialog ref="salonDialog" />
+    <employee-dialog ref="employeeDialog" />
   </v-container>
 </template>
 
@@ -174,9 +172,10 @@
 import gql from 'graphql-tag'
 import BrandDialog from '~/components/dialogs/brand-dialog.vue'
 import SalonDialog from '~/components/dialogs/salon-dialog.vue'
+import EmployeeDialog from '~/components/dialogs/employee-dialog.vue'
 
 export default {
-  components: { BrandDialog, SalonDialog },
+  components: { BrandDialog, SalonDialog, EmployeeDialog },
   apollo: {
     brand: {
       query: gql`
@@ -215,7 +214,7 @@ export default {
               name
               email
               avatar
-              brand_id
+              phone
             }
             paginatorInfo {
               total
@@ -251,6 +250,11 @@ export default {
     openSalonDialog(data) {
       this.$refs.salonDialog.open(data).then((result) => {
         this.$apollo.queries.brand.refetch()
+      })
+    },
+    openEmployeeDialog(data) {
+      this.$refs.employeeDialog.open(data).then((result) => {
+        this.$apollo.queries.employees.refetch()
       })
     },
   },

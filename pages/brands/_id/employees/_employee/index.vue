@@ -3,8 +3,9 @@
     <v-col cols="12" md="6">
       <v-card>
         <v-card-text class="text-center">
-          <v-avatar class="mx-auto" Í size="150" color="grey">
-            <v-icon>mdi-account</v-icon>
+          <v-avatar size="150" color="grey">
+            <v-icon v-if="!employee.avatar">mdi-account</v-icon>
+            <img v-else :src="employee.avatar | imgPath" alt="" />
           </v-avatar>
           <v-card-title class="justify-center">{{
             employee.name
@@ -48,24 +49,22 @@
         <v-divider />
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            :to="{
-              name: 'brands-id-employees-employee-edit',
-              params: { id: $route.params.id, employee: employee.id },
-            }"
-            text
-            color="primary"
+          <v-btn @click="openEmployeeDialog(employee)" text color="primary"
             >Sửa</v-btn
           >
         </v-card-actions>
       </v-card>
+
+      <employee-dialog ref="employeeDialog" />
     </v-col>
   </v-row>
 </template>
 
 <script>
 import gql from 'graphql-tag'
+import EmployeeDialog from '~/components/dialogs/employee-dialog.vue'
 export default {
+  components: { EmployeeDialog },
   apollo: {
     employee: {
       query: gql`
@@ -74,6 +73,9 @@ export default {
             id
             name
             email
+            avatar
+            phone
+            birthday
             created_at
             updated_at
             brand {
@@ -100,6 +102,13 @@ export default {
   data: () => ({
     employee: {},
   }),
+  methods: {
+    openEmployeeDialog(data) {
+      this.$refs.employeeDialog.open(data).then((result) => {
+        this.$apollo.queries.employee.refetch()
+      })
+    },
+  },
 }
 </script>
 

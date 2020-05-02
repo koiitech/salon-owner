@@ -1,12 +1,9 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer
-      v-model="drawer"
-      clipped
-      app
-    >
+    <v-navigation-drawer v-model="drawer" clipped app>
       <v-list two-line>
-        <v-list-item active-class="primary white--text"
+        <v-list-item
+          active-class="primary white--text"
           v-for="(item, i) in items"
           :key="i"
           :to="{ name: item.name }"
@@ -22,18 +19,15 @@
     </v-navigation-drawer>
     <v-app-bar clipped-left fixed app color="white">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-    
+
       <v-toolbar-title v-text="title" />
       <v-spacer />
-     
     </v-app-bar>
     <v-content class="grey lighten-4">
       <v-container>
         <nuxt />
       </v-container>
     </v-content>
-  
-  
   </v-app>
 </template>
 
@@ -44,14 +38,14 @@ export default {
       drawer: true,
       items: [
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Salon',
+          icon: 'mdi-star-box-multiple-outline',
+          title: 'Thương hiệu',
           name: 'brands',
         },
         {
-          icon: 'mdi-users',
-          title: 'Nhân viên',
-          name: 'employees',
+          icon: 'mdi-account-multiple',
+          title: 'Khách hàng',
+          name: 'customers',
         },
       ],
       title: 'Hệ thống quản lý salon',
