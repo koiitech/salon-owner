@@ -148,14 +148,14 @@
               (item) =>
                 $router.push({
                   name: 'brands-id-employees-employee',
-                  params: { id: item.brand_id, employee: item.id },
+                  params: { employee: item.id },
                 })
             "
           >
             <template v-slot:item.avatar="{ item }">
               <v-avatar size="32" class="elevation-1">
                 <v-icon v-if="!item.avatar">mdi-account</v-icon>
-                <img v-else :src="item.avatar | imgPath" alt="item.name" />
+                <img v-else :src="item.avatar | imgPath" :alt="item.id" />
               </v-avatar>
             </template>
           </v-data-table>

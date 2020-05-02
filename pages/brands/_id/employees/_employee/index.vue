@@ -14,37 +14,41 @@
         </v-card-text>
         <v-divider />
         <v-list>
-          <template v-if="employee.brand">
-            <v-list-item
-              :to="{ name: 'brands-id', params: { id: employee.brand.id } }"
-            >
-              <v-list-item-avatar>
-                <v-img
-                  :src="employee.brand.logo | imgPath"
-                  :alt="employee.brand.name"
-                ></v-img>
-              </v-list-item-avatar>
+          <v-list-item three-line>
+            <v-list-item-avatar>
+              <v-icon>mdi-map-marker</v-icon>
+            </v-list-item-avatar>
 
-              <v-list-item-content>
-                <v-list-item-title>{{ employee.brand.name }}</v-list-item-title>
-                <v-list-item-subtitle>Thương hiệu</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-          <template v-if="employee.salon">
-            <v-list-item>
-              <v-list-item-avatar>
-                <v-img :src="employee.salon.logo" alt=""></v-img>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>{{ employee.salon.name }}</v-list-item-title>
-                <v-list-item-subtitle>{{
-                  employee.salon.address
-                }}</v-list-item-subtitle>
-                <v-list-item-subtitle>Nơi làm việc</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
+            <v-list-item-content v-if="!employee.salon">
+              <v-list-item-title>Chưa xác định chỗ làm</v-list-item-title>
+              <v-list-item-subtitle>Vị trí làm việc</v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-content v-else>
+              <v-list-item-title>{{ employee.salon.name }}</v-list-item-title>
+              <v-list-item-subtitle>{{
+                employee.salon.address
+              }}</v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-edit-dialog large persistent @save="saveUpdateEmployeeSalon">
+                <v-btn icon>
+                  <v-icon>mdi-circle-edit-outline</v-icon>
+                </v-btn>
+                <template v-slot:input>
+                  <v-autocomplete
+                    v-model="employee.salon_id"
+                    :items="salons"
+                    hide-no-data
+                    hide-selected
+                    item-text="name"
+                    item-value="id"
+                    label="Salons"
+                    placeholder="Chọn salons"
+                  ></v-autocomplete>
+                </template>
+              </v-edit-dialog>
+            </v-list-item-action>
+          </v-list-item>
         </v-list>
         <v-divider />
         <v-card-actions>
@@ -76,13 +80,9 @@ export default {
             avatar
             phone
             birthday
+            salon_id
             created_at
             updated_at
-            brand {
-              id
-              name
-              logo
-            }
             salon {
               id
               name
@@ -98,15 +98,54 @@ export default {
         }
       },
     },
+    salons: {
+      query: gql`
+        query GetSalons($brand_id: ID) {
+          salons(brand_id: $brand_id) {
+            id
+            name
+            address
+          }
+        }
+      `,
+      variables() {
+        return {
+          brand_id: this.$route.params.id,
+        }
+      },
+    },
   },
   data: () => ({
     employee: {},
+    salons: [],
   }),
   methods: {
     openEmployeeDialog(data) {
       this.$refs.employeeDialog.open(data).then((result) => {
         this.$apollo.queries.employee.refetch()
       })
+    },
+    saveUpdateEmployeeSalon(item) {
+      this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation UpdateEmployeeSalon($id: ID!, $salon_id: ID!) {
+              updateEmployeeSalon(id: $id, salon_id: $salon_id) {
+                id
+              }
+            }
+          `,
+          variables: {
+            id: this.employee.id,
+            salon_id: this.employee.salon_id,
+          },
+        })
+        .then(({ data }) => {
+          this.$apollo.queries.employee.refetch()
+        })
+        .catch((error) => {
+          console.error(error)
+        })
     },
   },
 }
