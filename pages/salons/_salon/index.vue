@@ -47,53 +47,53 @@
         </v-card>
       </v-col>
       <v-col cols="12" sm="6" md="7" lg="8">
-        <v-data-table
-          :headers="[
-            { text: 'Tên', value: 'name' },
-            { text: 'email', value: 'email' },
-            { text: '', value: '' },
-          ]"
-          :items="employees.data"
-          :options.sync="options"
-          :server-items-length="employees.paginatorInfo.total"
-          :loading="$apollo.loading"
-          @click:row="
-            (item) =>
-              $router.push({
-                name: 'brands-id-employees-employee',
-                params: { id: item.brand_id, employee: item.id },
-              })
-          "
-        >
-          <template v-slot:top>
-            <v-toolbar color="primary" dark flat>
-              <v-icon left>mdi-account-box-multiple</v-icon> Nhân viên
-              <v-spacer />
-              <v-text-field
-                solo-inverted
-                label="Tìm nhân viên"
-                hide-details
-                single-line
-                clearable
-                rounded
-              ></v-text-field>
-              <v-toolbar-items>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-btn text v-on="on"
-                      ><v-icon>mdi-account-plus-outline</v-icon></v-btn
-                    >
-                  </template>
-                  <span>Thêm nhân viên</span>
-                </v-tooltip>
-              </v-toolbar-items>
-            </v-toolbar>
-          </template></v-data-table
-        >
+        <v-card>
+          <v-toolbar flat color="primary" dark>
+            <v-icon left>mdi-account-box-multiple</v-icon> Nhân viên
+            <v-spacer />
+            <v-btn fab small color="primary"
+              ><v-icon>mdi-account-plus-outline</v-icon></v-btn
+            >
+          </v-toolbar>
+
+          <v-data-table
+            :headers="[
+              { text: 'Tên', value: 'name' },
+              { text: 'email', value: 'email' },
+              { text: '', value: '' },
+            ]"
+            :items="employees.data"
+            :options.sync="options"
+            :server-items-length="employees.paginatorInfo.total"
+            :loading="$apollo.loading"
+            @click:row="
+              (item) =>
+                $router.push({
+                  name: 'brands-id-employees-employee',
+                  params: { id: item.brand_id, employee: item.id },
+                })
+            "
+          >
+            <template v-slot:top>
+              <v-row>
+                <v-col cols="12" sm="6"></v-col>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    label="Tìm nhân viên"
+                    hide-details
+                    single-line
+                    clearable
+                    append-icon="mdi-magnify"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </template>
+          </v-data-table>
+        </v-card>
       </v-col>
       <v-col>
         <v-toolbar dark color="primary"
-          ><v-toolbar-title>Thực đơn</v-toolbar-title>
+          ><v-toolbar-title>Menus</v-toolbar-title>
           <v-spacer />
           <v-toolbar-items>
             <v-tooltip top>
@@ -109,7 +109,7 @@
             </v-tooltip>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn text v-on="on"
+                <v-btn text v-on="on" @click="openServiceDialog"
                   ><v-icon>mdi-text-box-plus-outline</v-icon></v-btn
                 >
               </template>
@@ -117,7 +117,9 @@
             </v-tooltip>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn text v-on="on"><v-icon>mdi-tray-plus</v-icon></v-btn>
+                <v-btn text v-on="on" @click="openExtraDialog"
+                  ><v-icon>mdi-tray-plus</v-icon></v-btn
+                >
               </template>
               <span>Thêm dịch vụ con</span>
             </v-tooltip>
@@ -280,16 +282,16 @@
       </v-col>
     </v-row>
     <category-dialog ref="categoryDialog" />
-    <service-dialog ref="serviceDialog" />
-    <extra-dialog ref="extraDialog" />
+    <service-dialog :categories="categories" ref="serviceDialog" />
+    <extra-dialog :categories="categories" ref="extraDialog" />
   </v-container>
 </template>
 
 <script>
 import gql from 'graphql-tag'
-import CategoryDialog from './category-dialog'
-import ServiceDialog from './service-dialog'
-import ExtraDialog from './extra-dialog'
+import CategoryDialog from '~/components/dialogs/category-dialog'
+import ServiceDialog from '~/components/dialogs/service-dialog'
+import ExtraDialog from '~/components/dialogs/extra-dialog'
 
 export default {
   components: { CategoryDialog, ServiceDialog, ExtraDialog },
