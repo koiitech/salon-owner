@@ -40,7 +40,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="deep-purple lighten-2" text>
+            <v-btn color="primary" @click="openSalonDialog(salon)" text>
               Sửa
             </v-btn>
           </v-card-actions>
@@ -281,6 +281,7 @@
         </v-expansion-panels>
       </v-col>
     </v-row>
+    <salon-dialog ref="salonDialog" />
     <category-dialog ref="categoryDialog" />
     <service-dialog :categories="categories" ref="serviceDialog" />
     <extra-dialog :categories="categories" ref="extraDialog" />
@@ -292,12 +293,13 @@ import getSalon from '~/graphql/queries/getSalon.gql'
 import getEmployees from '~/graphql/queries/getEmployees.gql'
 import getCategories from '~/graphql/queries/getCategories.gql'
 
+import SalonDialog from '~/components/dialogs/salon-dialog'
 import CategoryDialog from '~/components/dialogs/category-dialog'
 import ServiceDialog from '~/components/dialogs/service-dialog'
 import ExtraDialog from '~/components/dialogs/extra-dialog'
 
 export default {
-  components: { CategoryDialog, ServiceDialog, ExtraDialog },
+  components: { SalonDialog, CategoryDialog, ServiceDialog, ExtraDialog },
   apollo: {
     salon: {
       query: getSalon,
@@ -337,6 +339,11 @@ export default {
     categories: [],
   }),
   methods: {
+    openSalonDialog(salon) {
+      this.$refs.salonDialog.open(salon).then((result) => {
+        this.$apollo.queries.salon.refetch()
+      })
+    },
     openCategoryDialog(category) {
       this.$refs.categoryDialog.open(category).then((result) => {
         this.$apollo.queries.categories.refetch()
