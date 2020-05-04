@@ -66,7 +66,8 @@ export default class ApolloScheme {
       return
     }
 
-    const user = this.$apollo.query({ query: getMeQuery }).then(({ data }) => Object.values(data)[0])
+    const user = await this.$apollo.query({ query: getMeQuery })
+      .then(({ data }) => Object.values(data)[0])
       .catch(error => {
         console.log(error);
       });
