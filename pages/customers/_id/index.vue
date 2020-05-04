@@ -4,7 +4,9 @@
       <v-card>
         <v-card-text class="blue white--text text-center">
           <v-avatar size="150" color="blue lighten-3">
-            <v-icon x-large dark v-if="!customer.avatar">mdi-account-outline</v-icon>
+            <v-icon x-large dark v-if="!customer.avatar"
+              >mdi-account-outline</v-icon
+            >
             <img v-else :src="customer.avatar | imgPath" alt="" />
           </v-avatar>
           <v-card-title class="justify-center">{{
@@ -57,24 +59,13 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import getCustomer from '~/graphql/queries/getCustomer.gql'
 import CustomerDialog from '~/components/dialogs/customer-dialog.vue'
 export default {
   components: { CustomerDialog },
   apollo: {
     customer: {
-      query: gql`
-        query GetCustomer($id: ID!) {
-          customer(id: $id) {
-            id
-            name
-            email
-            avatar
-            phone
-            birthday
-          }
-        }
-      `,
+      query: getCustomer,
       variables() {
         return {
           id: this.$route.params.id,

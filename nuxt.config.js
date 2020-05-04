@@ -80,7 +80,6 @@ export default {
   },
 
   apollo: {
-    includeNodeModules: true,
     clientConfigs: {
       default: '~/configs/apollo.config.js',
     },

@@ -1,0 +1,21 @@
+query GetEmployees($first: Int!, $page: Int, $brand_id: ID, $salon_id: ID) {
+  employees(
+    first: $first
+    page: $page
+    brand_id: $brand_id
+    salon_id: $salon_id
+  ) {
+    data {
+      id
+      name
+      email
+      avatar
+      phone
+      brand_id
+    }
+    paginatorInfo {
+      total
+      hasMorePages
+    }
+  }
+}

@@ -1,0 +1,13 @@
+query GetBrands($page: Int, $first: Int!) {
+  brands(page: $page, first: $first) {
+    data {
+      id
+      name
+      logo
+      description
+    }
+    paginatorInfo {
+      hasMorePages
+    }
+  }
+}

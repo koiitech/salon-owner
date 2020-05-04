@@ -43,27 +43,13 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import getBrands from "~/graphql/queries/getBrands.gql";
 import BrandDialog from '~/components/dialogs/brand-dialog.vue'
 export default {
   components: { BrandDialog },
   apollo: {
     brands: {
-      query: gql`
-        query GetBrands($page: Int, $first: Int!) {
-          brands(page: $page, first: $first) {
-            data {
-              id
-              name
-              logo
-              description
-            }
-            paginatorInfo {
-              hasMorePages
-            }
-          }
-        }
-      `,
+      query: getBrands,
       variables() {
         return {
           page: this.options.page || 1,

@@ -1,0 +1,26 @@
+query GetCategories($salon_id: ID) {
+  categories(salon_id: $salon_id) {
+    id
+    name
+    image
+    description
+    services {
+      id
+      name
+      description
+      image
+      price
+      index
+      minutes
+      extras {
+        id
+        name
+        description
+        image
+        price
+        index
+        minutes
+      }
+    }
+  }
+}

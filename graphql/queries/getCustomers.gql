@@ -1,0 +1,13 @@
+query GetCustomers($page: Int, $first: Int!) {
+  customers(page: $page, first: $first) {
+    data {
+      id
+      name
+      avatar
+      email
+    }
+    paginatorInfo {
+      hasMorePages
+    }
+  }
+}

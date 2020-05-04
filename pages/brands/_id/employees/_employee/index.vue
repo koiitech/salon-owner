@@ -65,33 +65,16 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import getEmployee from '~/graphql/queries/getEmployee.gql'
+import getSalons from '~/graphql/queries/getSalons.gql'
+import updateEmployeeSalon from '~/graphql/mutations/updateEmployeeSalon.gql'
+
 import EmployeeDialog from '~/components/dialogs/employee-dialog.vue'
 export default {
   components: { EmployeeDialog },
   apollo: {
     employee: {
-      query: gql`
-        query GetEmployee($id: ID!) {
-          employee(id: $id) {
-            id
-            name
-            email
-            avatar
-            phone
-            birthday
-            salon_id
-            created_at
-            updated_at
-            salon {
-              id
-              name
-              logo
-              address
-            }
-          }
-        }
-      `,
+      query: getEmployee,
       variables() {
         return {
           id: this.$route.params.employee,
@@ -99,15 +82,7 @@ export default {
       },
     },
     salons: {
-      query: gql`
-        query GetSalons($brand_id: ID) {
-          salons(brand_id: $brand_id) {
-            id
-            name
-            address
-          }
-        }
-      `,
+      query: getSalons,
       variables() {
         return {
           brand_id: this.$route.params.id,
@@ -128,13 +103,7 @@ export default {
     saveUpdateEmployeeSalon(item) {
       this.$apollo
         .mutate({
-          mutation: gql`
-            mutation UpdateEmployeeSalon($id: ID!, $salon_id: ID!) {
-              updateEmployeeSalon(id: $id, salon_id: $salon_id) {
-                id
-              }
-            }
-          `,
+          mutation: updateEmployeeSalon,
           variables: {
             id: this.employee.id,
             salon_id: this.employee.salon_id,

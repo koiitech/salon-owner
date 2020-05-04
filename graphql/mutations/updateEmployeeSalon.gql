@@ -1,0 +1,5 @@
+mutation UpdateEmployeeSalon($id: ID!, $salon_id: ID!) {
+  updateEmployeeSalon(id: $id, salon_id: $salon_id) {
+    id
+  }
+}

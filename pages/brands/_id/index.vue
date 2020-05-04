@@ -180,7 +180,9 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import getBrand from '~/graphql/queries/getBrand.gql'
+import getEmployees from '~/graphql/queries/getEmployees.gql'
+
 import BrandDialog from '~/components/dialogs/brand-dialog.vue'
 import SalonDialog from '~/components/dialogs/salon-dialog.vue'
 import EmployeeDialog from '~/components/dialogs/employee-dialog.vue'
@@ -189,26 +191,7 @@ export default {
   components: { BrandDialog, SalonDialog, EmployeeDialog },
   apollo: {
     brand: {
-      query: gql`
-        query GetBrand($id: ID!) {
-          brand(id: $id) {
-            id
-            name
-            address
-            cover
-            logo
-            description
-            salons {
-              id
-              name
-              address
-              cover
-              logo
-              description
-            }
-          }
-        }
-      `,
+      query: getBrand,
       variables() {
         return {
           id: this.$route.params.id, // Works here!
@@ -217,23 +200,7 @@ export default {
     },
 
     employees: {
-      query: gql`
-        query GetEmployees($first: Int!, $page: Int, $brand_id: ID) {
-          employees(first: $first, page: $page, brand_id: $brand_id) {
-            data {
-              id
-              name
-              email
-              avatar
-              phone
-            }
-            paginatorInfo {
-              total
-              hasMorePages
-            }
-          }
-        }
-      `,
+      query: getEmployees,
       variables() {
         return {
           page: this.options.page || 1,

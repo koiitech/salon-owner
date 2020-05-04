@@ -44,28 +44,13 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import getCustomers from '~/graphql/queries/getCustomers.gql'
 import CustomerDialog from '~/components/dialogs/customer-dialog.vue'
 export default {
   components: { CustomerDialog },
   apollo: {
     customers: {
-      query: gql`
-        query GetCustomers($page: Int, $first: Int!) {
-          customers(page: $page, first: $first) {
-            data {
-              id
-              name
-              avatar
-              email
-            }
-            paginatorInfo {
-              hasMorePages
-            }
-          }
-        }
-      `,
-
+      query: getCustomers,
       variables() {
         return {
           page: this.options.page || 1,

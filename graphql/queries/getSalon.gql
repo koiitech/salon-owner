@@ -1,0 +1,10 @@
+query GetSalon($id: ID!) {
+  salon(id: $id) {
+    id
+    name
+    address
+    cover
+    logo
+    description
+  }
+}

@@ -1,0 +1,19 @@
+query GetEmployee($id: ID!) {
+  employee(id: $id) {
+    id
+    name
+    email
+    avatar
+    phone
+    birthday
+    salon_id
+    created_at
+    updated_at
+    salon {
+      id
+      name
+      logo
+      address
+    }
+  }
+}

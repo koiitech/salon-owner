@@ -288,7 +288,10 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import getSalon from '~/graphql/queries/getSalon.gql'
+import getEmployees from '~/graphql/queries/getEmployees.gql'
+import getCategories from '~/graphql/queries/getCategories.gql'
+
 import CategoryDialog from '~/components/dialogs/category-dialog'
 import ServiceDialog from '~/components/dialogs/service-dialog'
 import ExtraDialog from '~/components/dialogs/extra-dialog'
@@ -297,18 +300,7 @@ export default {
   components: { CategoryDialog, ServiceDialog, ExtraDialog },
   apollo: {
     salon: {
-      query: gql`
-        query GetSalon($id: ID!) {
-          salon(id: $id) {
-            id
-            name
-            address
-            cover
-            logo
-            description
-          }
-        }
-      `,
+      query: getSalon,
       variables() {
         return {
           id: this.$route.params.salon,
@@ -317,22 +309,7 @@ export default {
     },
 
     employees: {
-      query: gql`
-        query GetEmployees($first: Int!, $page: Int, $salon_id: ID) {
-          employees(first: $first, page: $page, salon_id: $salon_id) {
-            data {
-              id
-              name
-              email
-              avatar
-            }
-            paginatorInfo {
-              total
-              hasMorePages
-            }
-          }
-        }
-      `,
+      query: getEmployees,
       variables() {
         return {
           page: this.options.page || 1,
@@ -342,34 +319,7 @@ export default {
       },
     },
     categories: {
-      query: gql`
-        query GetCategories($salon_id: ID) {
-          categories(salon_id: $salon_id) {
-            id
-            name
-            image
-            description
-            services {
-              id
-              name
-              description
-              image
-              price
-              index
-              minutes
-              extras {
-                id
-                name
-                description
-                image
-                price
-                index
-                minutes
-              }
-            }
-          }
-        }
-      `,
+      query: getCategories,
       variables() {
         return {
           salon_id: this.$route.params.salon,

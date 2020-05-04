@@ -1,0 +1,7 @@
+query GetSalons($brand_id: ID) {
+  salons(brand_id: $brand_id) {
+    id
+    name
+    address
+  }
+}
