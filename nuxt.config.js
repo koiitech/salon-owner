@@ -1,3 +1,5 @@
+
+
 require('dotenv').config()
 
 export default {
@@ -28,6 +30,15 @@ export default {
     '~/assets/main.css'
   ],
   /*
+  ** Middleware
+  */
+  router: {
+    middleware: [
+      // 'auth/index',
+      'auth'
+    ]
+  },
+  /*
   ** Plugins to load before mounting the App
   */
   plugins: [
@@ -46,8 +57,20 @@ export default {
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
-    '@nuxtjs/apollo'
+    '@nuxtjs/apollo',
+    '@nuxtjs/auth'
   ],
+  /*
+  ** auth module configuration
+  ** https://auth.nuxtjs.org/guide/scheme.html
+  */
+  auth: {
+    strategies: {
+      apollo: {
+        _scheme: '~/plugins/auth/apollo-schema.js',
+      },
+    }
+  },
   /*
   ** vuetify module configuration
   ** https://github.com/nuxt-community/vuetify-module

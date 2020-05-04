@@ -4,7 +4,7 @@
       <v-card>
         <v-list>
           <v-list-item v-for="(item, index) in businesses" :key="index">
-            <v-list-item-content>{{item.name}}</v-list-item-content>
+            <v-list-item-content>{{ item.name }}</v-list-item-content>
           </v-list-item>
         </v-list>
       </v-card>
@@ -13,21 +13,21 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import getBusinesses from '~/graphql/queries/getBusinesses.gql'
 
 export default {
-   apollo: {
+  apollo: {
     businesses: {
-      query: gql`query businesses {
-        businesses {
-          id
-          name
-        }
-      }`
-    }
+      query: getBusinesses,
+    },
   },
-  data:() =>({
-    businesses:[]
-  })
+  data: () => ({
+    businesses: [],
+  }),
+  mounted() {
+    // this.$apolloHelpers.onLogout().then(() => {
+    //   this.$router.replace({ name: 'login' })
+    // })
+  },
 }
 </script>

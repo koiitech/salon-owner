@@ -54,55 +54,58 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import loginMutation from '~/graphql/mutations/login.gql'
+
 export default {
   layout: 'blank',
-  // middleware: 'notAuthenticated',
-
+  auth: false,
   data() {
     return {
       email: 'admin@gmail.com',
       password: '123456',
     }
   },
-  computed: {
-    formdata() {
-      return {
-        email: this.email,
-        password: this.password,
-      }
-    },
+  created() {
+    console.log(this.$apolloHelpers.getToken())
   },
   methods: {
     login() {
-      this.$apollo
-        .mutate({
-          // Query
-          mutation: gql`
-            mutation Login($email: String!, $password: String!) {
-              login(email: $email, password: $password) {
-                token {
-                  access_token
-                }
-                user {
-                  id
-                  name
-                  email
-                }
-              }
-            }
-          `,
-          variables: this.formdata,
+      this.$auth
+        .loginWith('apollo', {
+          loginMutation: loginMutation,
+          data: {
+            email: this.email,
+            password: this.password,
+          },
+          tokenKey: 'token.access_token',
         })
-        .then(({ data }) => {
-          this.$store.commit('auth/token', data.login.token)
-          this.$store.commit('auth/user', data.login.user)
-          this.$router.push({ name: 'index' })
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+        .then(() =>
+          // window.location.href = '/'
+          this.$router.replace({ name: 'index' })
+        )
+      // this.$apollo
+      //   .mutate({
+      //     mutation: loginMutation,
+      //     variables: {
+      //       email: this.email,
+      //       password: this.password,
+      //     },
+      //   })
+      //   .then(({ data }) => {
+      //     this.$store.commit('auth/user', data.login.user)
+      //     this.$apolloHelpers
+      //       .onLogin(data.login.token.access_token)
+      //       .then(() => {
+      //         this.$router.push({ name: 'index' })
+      //       })
+      //   })
+      //   .catch((error) => {
+      //     console.error(error)
+      //   })
     },
+  },
+  mounted() {
+    // console.log(this.$auth);
   },
 }
 </script>
